@@ -1,0 +1,33 @@
+# バージョンの指定
+version: "3.9"
+# 各dockerfileの指定
+services:
+  # WordPress用のコンテナ（wordpressという名前は任意で設定したもの）
+  wordpress:
+    build: ./wordpress          # Dockerfileが格納されたフォルダの相対パス
+    image: "myimage:wordpress"  # 設定したいコンテナイメージ名
+    environment:
+      WORDPRESS_DB_HOST: db_container:3306  # 接続先とポート番号の設定
+      WORDPRESS_DB_NAME: wordpress          # データベース名の設定
+      WORDPRESS_DB_USER: springuser         # データベースユーザの設定
+      WORDPRESS_DB_PASSWORD: ThePassword    # 上記ユーザのパスワードの設定
+    links:                # このコンテナが依存するコンテナとそのコンテナ名の指定
+      - "db:db_container"
+    container_name: "wp_container" #このコンテナの名前の指定
+  # MySQL用のコンテナ（dbという名前は任意で設定したもの）
+  db:
+    build: ./db
+    image: "myimage:db"
+    ports:
+      - 4306:4306
+    expose:               # 他のコンテナと通信できるポート番号の指定
+      - 3306
+    container_name: "db_container"
+    volumes:              # データの永続化の設定
+      - db_data:/var/lib/mysql       # ボリューム名:コンテナのディレクトリ
+      # MySQLのデータベースのデータは/var/lib/mysqlに保存
+      # この/var/lib/mysqlをDockerのボリュームdb_data上に保存することで永続化
+
+# ボリュームの設定
+volumes:
+  db_data:
