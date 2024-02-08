@@ -4,8 +4,7 @@ version: "3.9"
 services:
   # WordPress用のコンテナ（wordpressという名前は任意で設定したもの）
   wordpress:
-    build: ./wordpress          # Dockerfileが格納されたフォルダの相対パス
-    image: "myimage:wordpress"  # 設定したいコンテナイメージ名
+    image: "wordpress:6.1.1-php8.2-apache"  # 設定したいコンテナイメージ名
     environment:
       WORDPRESS_DB_HOST: db_container:3306  # 接続先とポート番号の設定
       WORDPRESS_DB_NAME: wordpress          # データベース名の設定
